@@ -1,7 +1,9 @@
 # OpenShift-4-UPI-Installation-on-Libvirt-KVM
 
+ 
+
 '''
-VIR_NET="default"
+  VIR_NET="default"
 HOST_NET=$(ip -4 a s $(virsh net-info $VIR_NET | awk '/Bridge:/{print $2}') | awk '/inet /{print $2}')
 HOST_IP=$(echo $HOST_NET | cut -d '/' -f1)
 #DNS_DIR="/etc/NetworkManager/dnsmasq.d"
