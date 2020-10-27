@@ -1,7 +1,5 @@
 # OpenShift-4-UPI-Installation-on-Libvirt-KVM
-
- 
-'''
+```
 
 VIR_NET="default"
 HOST_NET=$(ip -4 a s $(virsh net-info $VIR_NET | awk '/Bridge:/{print $2}') | awk '/inet /{print $2}')
@@ -12,7 +10,7 @@ WEB_PORT='1234'
 CLUSTER_NAME="mylab"
 SSH_KEY=<ssh pub key>
  
-'''
+```
   
   
   Download your pull secret from Red Hat OpenShift Cluster Manager and load into a variable. You can also copy paste the pull secret. The variable PULL_SEC should have your pull secret without any newlines.
