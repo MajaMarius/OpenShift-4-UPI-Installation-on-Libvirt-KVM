@@ -74,7 +74,7 @@ Create folder for Vms disks and download Centos image
     mkdir -p /data/VMs
     wget https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2 -O /data/VMs/${CLUSTER_NAME}-lb.qcow2
 
-Create LB machine 
+Create LB machine disk
 
 
 ```
@@ -83,6 +83,18 @@ virt-customize -a  /data/VMs/${CLUSTER_NAME}-lb.qcow2 \
   --uninstall cloud-init \
   --ssh-inject root:file:$SSH_KEY --selinux-relabel
 ```
+
+Create the machine
+
+```
+virt-install --import --name lb.${CLUSTER_NAME}.test \
+  --disk /var/lib/libvirt/images/${CLUSTER_NAME}-lb.qcow2,size=80 --memory 2048 --cpu host --vcpus 4 \
+  --network network=${VIR_NET},mac=52:54:00:aa:04:00 --noreboot --noautoconsole \
+  --graphics vnc,listen=0.0.0.0
+```
+
+Enter in LB Vm
+virsh console <Lbname>
 
 Download OpenShift client and install binaries and extract 
 
@@ -136,6 +148,48 @@ Check that VMs can access the host on the web port and open a HTTP server to ser
 
     iptables -I INPUT -p tcp -m tcp --dport ${WEB_PORT} -s ${HOST_NET} -j ACCEPT
     python -m SimpleHTTPServer ${WEB_PORT}
+    
+    
+ Create the VMs, Bootstrap, 3workers and 3masters
+ 
+ 
+ ```
+mac=1
+virt-install --name bootstrap.${CLUSTER_NAME}.test \
+  --disk /data/VMs/${CLUSTER_NAME}-bootstrap.qcow2,size=50 --ram 14000 --cpu host --vcpus 4 \ 
+  --os-type linux --os-variant rhel7 \
+  --graphics vnc,listen=0.0.0.0 \
+  --network network=${VIR_NET},mac=52:54:00:aa:04:0${mac} --noautoconsole \
+  --location boot/rhcos-install/ \
+  --extra-args "nomodeset rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda coreos.inst.image_url=http://${HOST_IP}:${WEB_PORT}/boot/rhcos-4.5.6-x86_64-metal.x86_64.raw.gz  coreos.inst.ignition_url=http://${HOST_IP}:${WEB_PORT}/install_dir/bootstrap.ign"
+mac=$(( $mac + 1 ))
+for i in {1..3}; do
+  virt-install --name master-${i}.${CLUSTER_NAME}.test \
+    --disk /data/VMs/${CLUSTER_NAME}-master-${i}.qcow2,size=60 --ram 16384 --cpu host --vcpus 5 \ 
+    --os-type linux --os-variant rhel7 \
+    --graphics vnc,listen=0.0.0.0 \
+    --network network=${VIR_NET},mac=52:54:00:aa:04:0${mac} --noautoconsole \
+    --location boot/rhcos-install/ \
+    --extra-args "nomodeset rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda coreos.inst.image_url=http://${HOST_IP}:${WEB_PORT}/boot/rhcos-4.5.6-x86_64-metal.x86_64.raw.gz coreos.inst.ignition_url=http://${HOST_IP}:${WEB_PORT}/install_dir/master.ign"
+    mac=$(( $mac + 1 ))
+done
+for i in {1..3}; do
+  virt-install --name worker-${i}.${CLUSTER_NAME}.test \
+    --disk /data/VMs/${CLUSTER_NAME}-worker-${i}.qcow2,size=60 --ram 16384 --cpu host --vcpus 5 \ 
+    --os-type linux --os-variant rhel7 \
+    --graphics vnc,listen=0.0.0.0 \
+    --network network=${VIR_NET},mac=52:54:00:aa:04:0${mac} --noautoconsole \
+    --location boot/rhcos-install/ \
+    --extra-args "nomodeset rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda coreos.inst.image_url=http://${HOST_IP}:${WEB_PORT}/boot/rhcos-4.5.6-x86_64-metal.x86_64.raw.gz coreos.inst.ignition_url=http://${HOST_IP}:${WEB_PORT}/install_dir/worker.ign"
+    mac=$(( $mac + 1 ))
+done
+```
+
+
+
+
+ 
+ 
 
 
 
