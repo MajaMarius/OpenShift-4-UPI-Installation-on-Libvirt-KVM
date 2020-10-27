@@ -9,7 +9,7 @@ BASE_DOM="test"
 WEB_PORT='1234'
 CLUSTER_NAME="mylab"
 SSH_KEY=<ssh pub key>
-  '''
+'''
   
   
   Download your pull secret from Red Hat OpenShift Cluster Manager and load into a variable. You can also copy paste the pull secret. The variable PULL_SEC should have your pull secret without any newlines.
