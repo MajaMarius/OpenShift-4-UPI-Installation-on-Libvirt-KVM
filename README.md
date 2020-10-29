@@ -240,7 +240,7 @@ Check that VMs can access the host on the web port and open a HTTP server to ser
 mac=1
 virt-install --name bootstrap.${CLUSTER_NAME}.test \
   --disk /home/vms/${CLUSTER_NAME}-bootstrap.qcow2,size=50 --ram 14000 --cpu host --vcpus 4 \
-  --os-type linux --os-variant rhel7 \
+  --os-type linux --os-variant centos7.0  \
   --graphics vnc,listen=0.0.0.0 \
   --network network=${VIR_NET},mac=52:54:00:aa:04:0${mac} --noautoconsole \
   --location rhcos-install/ \
@@ -249,7 +249,7 @@ mac=$(( $mac + 1 ))
 for i in {1..3}; do
   virt-install --name master-${i}.${CLUSTER_NAME}.test \
     --disk /home/vms/${CLUSTER_NAME}-master-${i}.qcow2,size=60 --ram 16384 --cpu host --vcpus 5 \
-    --os-type linux --os-variant rhel7 \
+    --os-type linux --os-variant centos7.0 \
     --graphics vnc,listen=0.0.0.0 \
     --network network=${VIR_NET},mac=52:54:00:aa:04:0${mac} --noautoconsole \
     --location rhcos-install/ \
@@ -259,7 +259,7 @@ done
 for i in {1..3}; do
   virt-install --name worker-${i}.${CLUSTER_NAME}.test \
     --disk /home/vms//${CLUSTER_NAME}-worker-${i}.qcow2,size=60 --ram 16384 --cpu host --vcpus 5 \
-    --os-type linux --os-variant rhel7 \
+    --os-type linux --os-variant centos7.0  \
     --graphics vnc,listen=0.0.0.0 \
     --network network=${VIR_NET},mac=52:54:00:aa:04:0${mac} --noautoconsole \
     --location rhcos-install/ \
