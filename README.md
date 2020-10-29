@@ -171,12 +171,6 @@ backend infra-https
 
 systemctl restart haproxy
 systemctl enable haproxy
-systemctl restart nfs-server
-systemctl enable nfs-server
-mkdir -p /nfs/registry
-mkdir -p /nfs/utils
-echo '/nfs/registry *(rw,root_squash)' > /etc/exports
-echo '/nfs/utils *(rw,root_squash)' >> /etc/exports
 showmount -e
 EOF
 
