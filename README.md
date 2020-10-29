@@ -98,7 +98,8 @@ virsh console <Lbname>
     
   Configure load balancing (haproxy).
   
-  ```CLUSTER_NAME=mylab
+  ```
+CLUSTER_NAME=mylab
 BASE_DOM=test
 ssh -l root lb.${CLUSTER_NAME}.${BASE_DOM} <<EOF
 yum install -y haproxy
