@@ -98,8 +98,7 @@ virsh console <Lbname>
     
   Configure load balancing (haproxy).
   
-  ```
-  CLUSTER_NAME=mylab
+  ```CLUSTER_NAME=mylab
 BASE_DOM=test
 ssh -l root lb.${CLUSTER_NAME}.${BASE_DOM} <<EOF
 yum install -y haproxy
@@ -148,6 +147,40 @@ backend master-mapi
   balance source
   server bootstrap bootstrap.${CLUSTER_NAME}.${BASE_DOM}:22623 check
   server master-1 master-1.${CLUSTER_NAME}.${BASE_DOM}:22623 check
+  server master-2 master-2.${CLUSTER_NAME}.${BASE_DOM}:22623 check
+  server master-3 master-3.${CLUSTER_NAME}.${BASE_DOM}:22623 check
+
+# 80 points to worker nodes
+frontend ${CLUSTER_NAME}-http *:80
+  default_backend ingress-http
+backend ingress-http
+  balance source
+  server worker-1 worker-1.${CLUSTER_NAME}.${BASE_DOM}:80 check
+  server worker-2 worker-2.${CLUSTER_NAME}.${BASE_DOM}:80 check
+  server worker-3 worker-3.${CLUSTER_NAME}.${BASE_DOM}:80 check
+
+# 443 points to worker nodes
+frontend ${CLUSTER_NAME}-https *:443
+  default_backend infra-https
+backend infra-https
+  balance source
+  server worker-1 worker-1.${CLUSTER_NAME}.${BASE_DOM}:443 check
+  server worker-2 worker-2.${CLUSTER_NAME}.${BASE_DOM}:443 check
+  server worker-3 worker-3.${CLUSTER_NAME}.${BASE_DOM}:443 check
+' > /etc/haproxy/haproxy.cfg
+
+systemctl restart haproxy
+systemctl enable haproxy
+systemctl restart nfs-server
+systemctl enable nfs-server
+mkdir -p /nfs/registry
+mkdir -p /nfs/utils
+echo '/nfs/registry *(rw,root_squash)' > /etc/exports
+echo '/nfs/utils *(rw,root_squash)' >> /etc/exports
+showmount -e
+EOF
+
+
   ```
 
 Download OpenShift client and install binaries and extract 
