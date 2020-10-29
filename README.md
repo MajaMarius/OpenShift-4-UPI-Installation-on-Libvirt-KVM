@@ -243,7 +243,7 @@ virt-install --name bootstrap.${CLUSTER_NAME}.test \
   --os-type linux --os-variant rhel7 \
   --graphics vnc,listen=0.0.0.0 \
   --network network=${VIR_NET},mac=52:54:00:aa:04:0${mac} --noautoconsole \
-  --location rhcos-install \
+  --location rhcos-install/ \
   --extra-args "nomodeset rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda coreos.inst.image_url=http://${HOST_IP}:${WEB_PORT}/rhcos-4.5.6-x86_64-metal.x86_64.raw.gz  coreos.inst.ignition_url=http://${HOST_IP}:${WEB_PORT}/install_dir/bootstrap.ign"
 mac=$(( $mac + 1 ))
 for i in {1..3}; do
@@ -252,7 +252,7 @@ for i in {1..3}; do
     --os-type linux --os-variant rhel7 \
     --graphics vnc,listen=0.0.0.0 \
     --network network=${VIR_NET},mac=52:54:00:aa:04:0${mac} --noautoconsole \
-    --location rhcos-install \
+    --location rhcos-install/ \
     --extra-args "nomodeset rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda coreos.inst.image_url=http://${HOST_IP}:${WEB_PORT}/rhcos-4.5.6-x86_64-metal.x86_64.raw.gz coreos.inst.ignition_url=http://${HOST_IP}:${WEB_PORT}/install_dir/master.ign"
     mac=$(( $mac + 1 ))
 done
@@ -262,7 +262,7 @@ for i in {1..3}; do
     --os-type linux --os-variant rhel7 \
     --graphics vnc,listen=0.0.0.0 \
     --network network=${VIR_NET},mac=52:54:00:aa:04:0${mac} --noautoconsole \
-    --location rhcos-install \
+    --location rhcos-install/ \
     --extra-args "nomodeset rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda coreos.inst.image_url=http://${HOST_IP}:${WEB_PORT}/rhcos-4.5.6-x86_64-metal.x86_64.raw.gz coreos.inst.ignition_url=http://${HOST_IP}:${WEB_PORT}/install_dir/worker.ign"
     mac=$(( $mac + 1 ))
 done
