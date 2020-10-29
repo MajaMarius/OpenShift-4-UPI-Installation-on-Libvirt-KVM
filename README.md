@@ -47,8 +47,8 @@ PULL_SEC='<paste-pull-secret>'
 
 ```
 mkdir rhcos-install
-wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.5/4.5.6/rhcos-4.5.6-x86_64-installer-kernel-x86_64 -O rhcos-install/vmlinuz
-wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.5/4.5.6/rhcos-4.5.6-x86_64-installer-initramfs.x86_64.img -O rhcos-install/initramfs.img
+wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.5/4.5.6/rhcos-4.5.6-x86_64-installer-kernel-x86_64 -O ./rhcos-install/vmlinuz
+wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.5/4.5.6/rhcos-4.5.6-x86_64-installer-initramfs.x86_64.img -O ./rhcos-install/initramfs.img
 ```
 
 Generate treeinfo
