@@ -160,14 +160,14 @@ backend ingress-http
   server worker-2 worker-2.${CLUSTER_NAME}.${BASE_DOM}:80 check
   server worker-3 worker-3.${CLUSTER_NAME}.${BASE_DOM}:80 check
 
-# 443 points to worker nodes
+# 443 points to master nodes
 frontend ${CLUSTER_NAME}-https *:443
   default_backend infra-https
 backend infra-https
   balance source
-  server worker-1 worker-1.${CLUSTER_NAME}.${BASE_DOM}:443 check
-  server worker-2 worker-2.${CLUSTER_NAME}.${BASE_DOM}:443 check
-  server worker-3 worker-3.${CLUSTER_NAME}.${BASE_DOM}:443 check
+  server master-1 worker-1.${CLUSTER_NAME}.${BASE_DOM}:443 check
+  server master-2 worker-2.${CLUSTER_NAME}.${BASE_DOM}:443 check
+  server master-3 worker-3.${CLUSTER_NAME}.${BASE_DOM}:443 check
 ' > /etc/haproxy/haproxy.cfg
 
 systemctl restart haproxy
